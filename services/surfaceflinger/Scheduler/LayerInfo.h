@@ -294,6 +294,7 @@ private:
         mutable std::optional<HeuristicTraceTagData> mHeuristicTraceTagData;
         std::deque<RefreshRateData> mRefreshRates;
         static constexpr float MARGIN_CONSISTENT_FPS = 5.0;
+        static constexpr float MARGIN_CONSISTENT_FPS = 1.0;
         static constexpr float MARGIN_CONSISTENT_FPS_FOR_CLOSEST_REFRESH_RATE = 5.0;
     };
 

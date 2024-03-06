@@ -74,6 +74,7 @@ namespace input_flags = com::android::input::flags;
 
 // TODO(b/312714754): remove the corresponding code, as well.
 static const bool REMOVE_APP_SWITCH_DROPS = true;
+static const bool REMOVE_APP_SWITCH_DROPS = input_flags::remove_app_switch_drops();
 
 namespace android::inputdispatcher {
 

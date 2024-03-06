@@ -1807,6 +1807,12 @@ VkResult CreateSwapchainKHR(VkDevice device,
     num_images = std::clamp(num_images,
             surface_capabilities2.surfaceCapabilities.minImageCount,
             surface_capabilities2.surfaceCapabilities.maxImageCount);
+    uint32_t num_images;
+    if (create_info->presentMode  == VK_PRESENT_MODE_MAILBOX_KHR) {
+        num_images = std::max(3u, create_info->minImageCount);
+    } else {
+        num_images = create_info->minImageCount;
+    }
 
     const uint32_t buffer_count = std::max(min_buffer_count, num_images);
     err = native_window_set_buffer_count(window, buffer_count);

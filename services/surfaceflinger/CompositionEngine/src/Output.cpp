@@ -919,6 +919,7 @@ compositionengine::OutputLayer* Output::findLayerRequestingBackgroundComposition
         compositionengine::OutputLayer* layer = getOutputLayerOrderedByZByIndex(i);
         compositionengine::OutputLayer* nextLayer = getOutputLayerOrderedByZByIndex(i + 1);
 
+    for (auto* layer : getOutputLayersOrderedByZ()) {
         const auto* compState = layer->getLayerFE().getCompositionState();
 
         // If any layer has a sideband stream, we will disable blurs. In that case, we don't

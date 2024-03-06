@@ -358,6 +358,9 @@ TEST_F(LayerSnapshotTest, CanCropTouchableRegionWithDisplayTransform) {
     DisplayInfo displayInfo;
     displayInfo.transform = ui::Transform(ui::Transform::RotationFlags::ROT_90, 1000, 1000);
     mFrontEndDisplayInfos.emplace_or_replace(ui::LayerStack::fromValue(1), displayInfo);
+TEST_F(LayerSnapshotTest, blurUpdatesWhenAlphaChanges) {
+    int blurRadius = 42;
+    setBackgroundBlurRadius(1221, static_cast<uint32_t>(blurRadius));
 
     Rect touchCrop{300, 300, 400, 500};
     createRootLayer(3);
@@ -375,6 +378,11 @@ TEST_F(LayerSnapshotTest, blurUpdatesWhenAlphaChanges) {
     int blurRadius = 42;
     setBackgroundBlurRadius(1221, static_cast<uint32_t>(blurRadius));
 
+    UPDATE_AND_VERIFY(mSnapshotBuilder, STARTING_ZORDER);
+    EXPECT_EQ(getSnapshot({.id = 1221})->backgroundBlurRadius, blurRadius);
+
+    blurRadius = 21;
+    setBackgroundBlurRadius(1221, static_cast<uint32_t>(blurRadius));
     UPDATE_AND_VERIFY(mSnapshotBuilder, STARTING_ZORDER);
     EXPECT_EQ(getSnapshot({.id = 1221})->backgroundBlurRadius, blurRadius);
 

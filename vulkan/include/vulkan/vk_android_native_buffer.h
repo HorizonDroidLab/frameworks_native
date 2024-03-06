@@ -126,6 +126,7 @@ typedef struct {
     VkNativeBufferUsage2ANDROID       usage2; /* DEPRECATED in SPEC_VERSION 9 */
     uint64_t                          usage3; /* ADDED in SPEC_VERSION 9 */
     AHardwareBuffer*                  ahb; /* ADDED in SPEC_VERSION 11 */
+    struct AHardwareBuffer*           ahb; /* ADDED in SPEC_VERSION 11 */
 } VkNativeBufferANDROID;
 
 /*

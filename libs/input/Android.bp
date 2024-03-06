@@ -220,7 +220,11 @@ cc_library {
         "libPlatformProperties",
         "libtinyxml2",
         "libutils",
+<<<<<<< HEAD
         "libvintf",
+=======
+        "libz", // needed by libkernelconfigs
+>>>>>>> df7e621822 (Merge Android 14 QPR2 to AOSP main)
         "server_configurable_flags",
     ],
 

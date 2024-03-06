@@ -5081,5 +5081,57 @@ TEST_F(OutputPresentFrameAndReleaseLayersAsyncTest, calledForOneFrame) {
     mOutput->present(mRefreshArgs);
 }
 
+/*
+ * Output::updateProtectedContentState()
+ */
+
+struct OutputUpdateProtectedContentStateTest : public testing::Test {
+    struct OutputPartialMock : public OutputPartialMockBase {
+        // Sets up the helper functions called by the function under test to use
+        // mock implementations.
+        MOCK_METHOD0(presentFrameAndReleaseLayers, void());
+        MOCK_METHOD0(presentFrameAndReleaseLayersAsync, ftl::Future<std::monostate>());
+    };
+    OutputPresentFrameAndReleaseLayersAsyncTest() {
+        mOutput->setDisplayColorProfileForTest(
+                std::unique_ptr<DisplayColorProfile>(mDisplayColorProfile));
+        mOutput->setRenderSurfaceForTest(std::unique_ptr<RenderSurface>(mRenderSurface));
+        mOutput->setCompositionEnabled(true);
+        mRefreshArgs.outputs = {mOutput};
+    }
+
+    mock::DisplayColorProfile* mDisplayColorProfile = new NiceMock<mock::DisplayColorProfile>();
+    mock::RenderSurface* mRenderSurface = new NiceMock<mock::RenderSurface>();
+    std::shared_ptr<OutputPartialMock> mOutput{std::make_shared<NiceMock<OutputPartialMock>>()};
+    CompositionRefreshArgs mRefreshArgs;
+};
+
+TEST_F(OutputPresentFrameAndReleaseLayersAsyncTest, notCalledWhenNotRequested) {
+    EXPECT_CALL(*mOutput, presentFrameAndReleaseLayersAsync()).Times(0);
+    EXPECT_CALL(*mOutput, presentFrameAndReleaseLayers()).Times(1);
+
+    mOutput->present(mRefreshArgs);
+}
+
+TEST_F(OutputPresentFrameAndReleaseLayersAsyncTest, calledWhenRequested) {
+    EXPECT_CALL(*mOutput, presentFrameAndReleaseLayersAsync())
+            .WillOnce(Return(ftl::yield<std::monostate>({})));
+    EXPECT_CALL(*mOutput, presentFrameAndReleaseLayers()).Times(0);
+
+    mOutput->offloadPresentNextFrame();
+    mOutput->present(mRefreshArgs);
+}
+
+TEST_F(OutputPresentFrameAndReleaseLayersAsyncTest, calledForOneFrame) {
+    ::testing::InSequence inseq;
+    EXPECT_CALL(*mOutput, presentFrameAndReleaseLayersAsync())
+            .WillOnce(Return(ftl::yield<std::monostate>({})));
+    EXPECT_CALL(*mOutput, presentFrameAndReleaseLayers()).Times(1);
+
+    mOutput->offloadPresentNextFrame();
+    mOutput->present(mRefreshArgs);
+    mOutput->present(mRefreshArgs);
+}
+
 } // namespace
 } // namespace android::compositionengine

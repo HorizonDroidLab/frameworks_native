@@ -62,6 +62,79 @@ cc_defaults {
             ],
             cflags: [
                 "-D__ANDROID_HOST__",
+    target: {
+        host: {
+            sanitize: {
+                address: true,
+            },
+            include_dirs: [
+                "bionic/libc/kernel/android/uapi/",
+                "bionic/libc/kernel/uapi",
+            ],
+            cflags: [
+                "-D__ANDROID_HOST__",
+            ],
+        },
+    },
+}
+
+/////////////////////////////////////////////////
+// libinputflinger
+/////////////////////////////////////////////////
+
+filegroup {
+    name: "libinputflinger_sources",
+    srcs: [
+        "InputCommonConverter.cpp",
+        "InputDeviceMetricsCollector.cpp",
+        "InputFilter.cpp",
+        "InputProcessor.cpp",
+        "PointerChoreographer.cpp",
+        "PreferStylusOverTouchBlocker.cpp",
+        "UnwantedInteractionBlocker.cpp",
+    ],
+}
+
+cc_defaults {
+    name: "libinputflinger_defaults",
+    srcs: [":libinputflinger_sources"],
+    shared_libs: [
+        "android.hardware.input.processor-V1-ndk",
+        "com.android.server.inputflinger-ndk",
+        "libbase",
+        "libbinder",
+        "libbinder_ndk",
+        "libchrome",
+        "libcrypto",
+        "libcutils",
+        "libhidlbase",
+        "libinput",
+        "libkll",
+        "liblog",
+        "libprotobuf-cpp-lite",
+        "libstatslog",
+        "libutils",
+        "libstatspull",
+        "libstatssocket",
+        "server_configurable_flags",
+    ],
+    static_libs: [
+        "libattestation",
+        "libpalmrejection",
+        "libui-types",
+    ],
+    generated_headers: [
+        "cxx-bridge-header",
+        "inputflinger_rs_bootstrap_bridge_header",
+    ],
+    header_libs: ["inputflinger_rs_bootstrap_cxx_headers"],
+    generated_sources: ["inputflinger_rs_bootstrap_bridge_code"],
+    whole_static_libs: ["libinputflinger_rs"],
+    export_shared_lib_headers: ["com.android.server.inputflinger-ndk"],
+    target: {
+        android: {
+            shared_libs: [
+                "libgui",
             ],
         },
     },
