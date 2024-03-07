@@ -391,6 +391,11 @@ TEST_F(LayerSnapshotTest, blurUpdatesWhenAlphaChanges) {
     UPDATE_AND_VERIFY(mSnapshotBuilder, STARTING_ZORDER);
     EXPECT_EQ(getSnapshot({.id = 1221})->backgroundBlurRadius, blurRadius);
 
+    blurRadius = 21;
+    setBackgroundBlurRadius(1221, static_cast<uint32_t>(blurRadius));
+    UPDATE_AND_VERIFY(mSnapshotBuilder, STARTING_ZORDER);
+    EXPECT_EQ(getSnapshot({.id = 1221})->backgroundBlurRadius, blurRadius);
+
     static constexpr float alpha = 0.5;
     setAlpha(12, alpha);
     UPDATE_AND_VERIFY(mSnapshotBuilder, STARTING_ZORDER);

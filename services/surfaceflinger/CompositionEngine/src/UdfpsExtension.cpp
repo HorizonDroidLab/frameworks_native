@@ -1,6 +1,7 @@
 /*
  * Copyright 2020 The LineageOS Project
  * Copyright 2023 The Android Open Source Project
+ * Copyright (C) 2023 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +27,21 @@ package android.gui;
 parcelable SchedulingPolicy {
     int policy;
     int priority;
+#include <fuzzbinder/libbinder_driver.h>
+
+#include "SurfaceFlinger.h"
+#include "SurfaceFlingerDefaultFactory.h"
+
+using namespace android;
+
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
+    DefaultFactory factory;
+    sp<SurfaceFlinger> flinger = sp<SurfaceFlinger>::make(factory);
+    flinger->init();
+
+    sp<SurfaceComposerAIDL> composerAIDL = sp<SurfaceComposerAIDL>::make(flinger);
+    fuzzService({flinger, composerAIDL}, FuzzedDataProvider(data, size));
+    return 0;
 }
 
 uint64_t getUdfpsUsageBits(uint64_t usageBits, __unused bool touched) {
