@@ -163,7 +163,6 @@ cc_library_shared {
         "true": ["-DEGL_DISPLAY_ARRAY"],
         default: [],
     }),
->>>>>>> 914849fcff (EGL: move display array config to select)
     llndk: {
         symbol_file: "libEGL.map.txt",
         export_llndk_headers: ["gl_headers"],
